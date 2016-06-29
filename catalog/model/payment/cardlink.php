@@ -51,6 +51,7 @@ class ModelPaymentCardlink extends Model {
 			$method_data = array(
 				'code'       => 'cardlink',
 				'title'      => $this->language->get('text_title'),
+				'terms'      => '',
 				'sort_order' => $this->config->get('cardlink_sort_order')
 			);
 		}

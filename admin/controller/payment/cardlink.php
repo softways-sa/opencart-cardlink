@@ -23,8 +23,6 @@ class ControllerPaymentCardlink extends Controller {
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['entry_mid'] = $this->language->get('entry_mid');
-		$data['entry_confirmUrl'] = $this->language->get('entry_confirmUrl');
-		$data['entry_cancelUrl'] = $this->language->get('entry_cancelUrl');
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 		$data['text_all_zones'] = $this->language->get('text_all_zones');
@@ -107,17 +105,9 @@ class ControllerPaymentCardlink extends Controller {
 			$data['cardlink_mid'] = $this->config->get('cardlink_mid');
 		}
 
-		if (isset($this->request->post['cardlink_confirmUrl'])) {
-			$data['cardlink_confirmUrl'] = $this->request->post['cardlink_confirmUrl'];
-		} else {
-			$data['cardlink_confirmUrl'] = $this->config->get('cardlink_confirmUrl');
-		}
-
-		if (isset($this->request->post['cardlink_cancelUrl'])) {
-			$data['cardlink_cancelUrl'] = $this->request->post['cardlink_cancelUrl'];
-		} else {
-			$data['cardlink_cancelUrl'] = $this->config->get('cardlink_cancelUrl');
-		}
+		$data['cardlink_confirmUrl'] = "/index.php?route=checkout/success";
+		
+		$data['cardlink_cancelUrl'] = "/index.php?route=checkout/failure";
 
 		if (isset($this->request->post['cardlink_geo_zone_id'])) {
 			$data['cardlink_geo_zone_id'] = $this->request->post['cardlink_geo_zone_id'];
@@ -187,7 +177,7 @@ class ControllerPaymentCardlink extends Controller {
 			$this->error['warning_digest'] = $this->language->get('error_digest');
 		}
 
-		if (!$this->request->post['cardlink_minimum_installments_cost']) {
+		if (!is_float ( floatval($this->request->post['cardlink_minimum_installments_cost']) ) || $this->request->post['cardlink_minimum_installments_cost'] == "") {
 			$this->error['warning_minimum_installments_cost'] = $this->language->get('error_minimum_installments_cost');
 		}
 
@@ -195,7 +185,7 @@ class ControllerPaymentCardlink extends Controller {
 			$this->error['warning_installments'] = $this->language->get('error_installments');
 		}
 
-		if (!$this->request->post['cardlink_installments']) {
+		if (!is_int( intval($this->request->post['cardlink_installments']) ) || $this->request->post['cardlink_installments'] == "") {
 			$this->error['warning_empty_installments'] = $this->language->get('error_empty_installments');
 		}
 

@@ -92,18 +92,6 @@
                   <?php } ?>
                 </div>
               </div>
-              <div class="form-group required">
-                <label class="col-sm-2 control-label" for="cardlink_confirmUrl"><?php echo $entry_confirmUrl; ?></label>
-                <div class="col-sm-10">
-                  <input type="text" name="cardlink_confirmUrl" value="<?php echo $cardlink_confirmUrl; ?>" placeholder="<?php echo $cardlink_confirmUrl; ?>" id="cardlink_confirmUrl" class="form-control"/>
-                </div>
-              </div>
-              <div class="form-group required">
-                <label class="col-sm-2 control-label" for="cardlink_cancelUrl"><?php echo $entry_cancelUrl; ?></label>
-                <div class="col-sm-10">
-                  <input type="text" name="cardlink_cancelUrl" value="<?php echo $cardlink_cancelUrl; ?>" placeholder="<?php echo $cardlink_cancelUrl; ?>" id="cardlink_cancelUrl" class="form-control"/>
-                </div>
-              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
                 <div class="col-sm-10">

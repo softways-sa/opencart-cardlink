@@ -29,7 +29,17 @@ class ControllerPaymentCardlink extends Controller {
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
+		
+		$data['opencart_theme'] = $this->config->get('theme_default_directory');
+		if ($data['opencart_theme'] == "journal2") {
+			$data['ajax_call_route'] = "journal2/checkout/cart";
+			$data['confirm_button'] = "journal-checkout-confirm-button";
+		}
+		else {
+			$data['ajax_call_route'] = "checkout/confirm";
+			$data['confirm_button'] = "default-btn-primary";
+		}
+		
 		if ($order_info) {
 			$data['mid'] = $this->config->get('cardlink_mid');
 			$data['confirmUrl'] = $this->url->link('payment/cardlink/callback', '', true);
@@ -43,14 +53,16 @@ class ControllerPaymentCardlink extends Controller {
 			$data['order_id'] = $this->session->data['order_id'];			
 			
 			if ($order_info['total'] < $this->config->get('cardlink_minimum_installments_cost')) {
-			  $this->session->data['cardlink_installments'] = "";
-			  $data['extInstallmentoffset'] = "";
+				$this->session->data['cardlink_selected_installments'] = "";
+				$data['cardlink_selected_installments'] = $this->session->data['cardlink_selected_installments'];
+				$data['extInstallmentoffset'] = "";
 			}
 			else {
-				$data['extInstallmentoffset'] = "0";
-				if (!isset($this->session->data['cardlink_installments'])) {
-					$this->session->data['cardlink_installments'] = "0";
+				if (!isset($this->session->data['cardlink_selected_installments'])) {
+					$this->session->data['cardlink_selected_installments'] = 0;
 				}
+				$data['cardlink_selected_installments'] = $this->session->data['cardlink_selected_installments'];
+				$data['extInstallmentoffset'] = "0";
 			}
 
 			return $this->load->view('payment/cardlink', $data);
@@ -91,13 +103,13 @@ class ControllerPaymentCardlink extends Controller {
 		if ($order_info && $post_DIGEST == $digest) {
 			if ($this->request->post['status'] == "AUTHORIZED" || $this->request->post['status'] == "CAPTURED") {
 				$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
-				unset($this->session->data['cardlink_installments']);
+				unset($this->session->data['cardlink_selected_installments']);
 				return $this->response->redirect($this->url->link('checkout/success'));
 			}
 			else if ($this->request->post['status'] == "CANCELED" || $this->request->post['status'] == "REFUSED" || $this->request->post['status'] == "ERROR") {
 				$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_fraud_status_id'));
 				unset($this->session->data['order_id']);
-				unset($this->session->data['cardlink_installments']);
+				unset($this->session->data['cardlink_selected_installments']);
 				return $this->response->redirect($this->url->link('checkout/failure'));
 			}
 		}
@@ -105,7 +117,7 @@ class ControllerPaymentCardlink extends Controller {
 	
 	public function saveInstallments() {
 		if ($this->request->post['cardlink_installments'] <= $this->config->get('cardlink_installments')) {
-			$this->session->data['cardlink_installments'] = $this->request->post['cardlink_installments'];	
+			$this->session->data['cardlink_selected_installments'] = $this->request->post['cardlink_installments'];	
 		}		
 	}
 }
