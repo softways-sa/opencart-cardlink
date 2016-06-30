@@ -31,7 +31,7 @@ $digest = base64_encode(sha1($form_data,true));
         <label class="col-sm-2 control-label" for="extInstallmentperiod" style="padding-right:0px;"><h2 class="installments"><?php echo $installments; ?></h2></label>
       <div class="col-sm-4" id="select_installments">
       <select name="extInstallmentperiod" id="extInstallmentperiod" class="form-control" style="margin-bottom: 20px;">
-      <option value="">0</option>
+      <option value="">--</option>
       <?php 
       for($i=2; $i<=$extInstallmentperiod; $i++) {
         echo '<option value="'.$i.'"';
@@ -74,16 +74,22 @@ $digest = base64_encode(sha1($form_data,true));
         data: {cardlink_installments: this.value},
         method : 'POST',
         beforeSend: function() {
-			$('#<?php echo $confirm_button; ?>').button('loading');
-			$('#select_installments select[name=\'extInstallmentperiod\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
-	    },  
+          $('#<?php echo $confirm_button; ?>').button('loading');
+          $('#select_installments select[name=\'extInstallmentperiod\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+        },  
         complete: function(){
           $.ajax({
-          url: 'index.php?route=<?php echo $ajax_call_route; ?>',  
-          complete: function() {
-            $('#<?php echo $confirm_button; ?>').button('reset');
-			$('.fa-spin').remove();
-          }
+            url: 'index.php?route=<?php echo $ajax_call_route; ?>',  
+            dataType: 'html',
+            success: function(html) {
+              <?php 
+              if ($ajax_call_route == "checkout/confirm") {
+                echo "$('#collapse-checkout-confirm .panel-body').html(html);";
+              }
+              ?>
+              $('#<?php echo $confirm_button; ?>').button('reset');
+              $('.fa-spin').remove();
+            }
           });
         }
       });

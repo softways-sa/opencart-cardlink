@@ -58,11 +58,17 @@ class ControllerPaymentCardlink extends Controller {
 				$data['extInstallmentoffset'] = "";
 			}
 			else {
-				if (!isset($this->session->data['cardlink_selected_installments'])) {
-					$this->session->data['cardlink_selected_installments'] = 0;
+				if (!isset($this->session->data['cardlink_selected_installments']) ) {
+					$this->session->data['cardlink_selected_installments'] = "";
+          $data['extInstallmentoffset'] = "";
 				}
 				$data['cardlink_selected_installments'] = $this->session->data['cardlink_selected_installments'];
-				$data['extInstallmentoffset'] = "0";
+				if ($this->session->data['cardlink_selected_installments'] == "" ) {
+          $data['extInstallmentoffset'] = "";
+        }
+        else {
+          $data['extInstallmentoffset'] = 0;
+        }
 			}
 
 			return $this->load->view('payment/cardlink', $data);
