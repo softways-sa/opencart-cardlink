@@ -47,10 +47,10 @@ class ControllerPaymentCardlink extends Controller {
 			$data['extInstallmentperiod'] = $this->config->get('cardlink_installments');
 			$data['minimum_installments_cost'] = $this->config->get('cardlink_minimum_installments_cost');
 			$data['cardlink_digest'] = $this->config->get('cardlink_digest');
-			$data['currency_code'] = $order_info['currency_code'];
-			$data['orderAmount'] = round($order_info['total'],2);
+			$data['currency_code'] = 'EUR';
+			$data['orderAmount'] = number_format(round($order_info['total'],2), 2, '.', '');
 			$data['orderDesc'] = "Cart checkout";
-			$data['order_id'] = $this->session->data['order_id'];			
+			$data['order_id'] = $this->session->data['order_id'];
 			
 			if ($order_info['total'] < $this->config->get('cardlink_minimum_installments_cost')) {
 				$this->session->data['cardlink_selected_installments'] = "";
@@ -115,7 +115,6 @@ class ControllerPaymentCardlink extends Controller {
 			else if ($this->request->post['status'] == "CANCELED" || $this->request->post['status'] == "REFUSED" || $this->request->post['status'] == "ERROR") {
 				$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_fraud_status_id'));
 				unset($this->session->data['order_id']);
-				unset($this->session->data['cardlink_selected_installments']);
 				return $this->response->redirect($this->url->link('checkout/failure'));
 			}
 		}
