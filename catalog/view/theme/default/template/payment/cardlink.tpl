@@ -84,7 +84,10 @@ $digest = base64_encode(sha1($form_data,true));
             success: function(html) {
               <?php 
               if ($ajax_call_route == "checkout/confirm") {
-                echo "$('#collapse-checkout-confirm .panel-body').html(html);";
+                echo $cart_div;
+              }
+              else {
+                echo $cart_div;
               }
               ?>
               $('#<?php echo $confirm_button; ?>').button('reset');

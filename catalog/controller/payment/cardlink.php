@@ -19,10 +19,10 @@ class ControllerPaymentCardlink extends Controller {
 			}
 		} else {
 			if ($this->config->get('cardlink_bank') == 0) {
-				$data['action'] = '';
+				$data['action'] = 'https://vpos.eurocommerce.gr/vpos/shophandlermpi';
 			}
 			else if ($this->config->get('cardlink_bank') == 1) {
-				$data['action'] = '';
+				$data['action'] = 'https://www.alphaecommerce.gr/vpos/shophandlermpi';
 			}
 		}
 		
@@ -34,10 +34,12 @@ class ControllerPaymentCardlink extends Controller {
 		if ($data['opencart_theme'] == "journal2") {
 			$data['ajax_call_route'] = "journal2/checkout/cart";
 			$data['confirm_button'] = "journal-checkout-confirm-button";
+			$data['cart_div'] = "$('.checkout-content.checkout-cart').replaceWith(html);";
 		}
 		else {
 			$data['ajax_call_route'] = "checkout/confirm";
 			$data['confirm_button'] = "default-btn-primary";
+			$data['cart_div'] = "$('#collapse-checkout-confirm .panel-body').html(html);";
 		}
 		
 		if ($order_info) {
@@ -99,7 +101,7 @@ class ControllerPaymentCardlink extends Controller {
 		if (isset($_POST['payMethod'])) {$post_data_array[8] = $_POST['payMethod'];}
 		if (isset($_POST['txId'])) {$post_data_array[9] = $_POST['txId'];}
 		if (isset($_POST['paymentRef'])) {$post_data_array[10] = $_POST['paymentRef'];}
-		$post_data_array[11] = "Cardlink1";
+		$post_data_array[11] = $this->config->get('cardlink_digest');
 	
 		$post_DIGEST = $_POST['digest'];
 		
